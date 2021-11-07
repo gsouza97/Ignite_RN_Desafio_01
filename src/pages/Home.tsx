@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 
 import { Header } from "../components/Header";
 import { Task, TasksList } from "../components/TasksList";
@@ -10,12 +10,17 @@ export function Home() {
 
   function handleAddTask(newTaskTitle: string) {
     //TODO - add new task
-    const newTask = {
-      id: new Date().getTime(),
-      title: newTaskTitle,
-      done: false,
-    };
-    setTasks([...tasks, newTask]);
+    const isExisting = tasks.find((task) => task.title === newTaskTitle);
+    if (isExisting) {
+      Alert.alert("Tarefa já cadastrada.");
+    } else {
+      const newTask = {
+        id: new Date().getTime(),
+        title: newTaskTitle,
+        done: false,
+      };
+      setTasks([...tasks, newTask]);
+    }
   }
 
   function handleToggleTaskDone(id: number) {
@@ -28,7 +33,14 @@ export function Home() {
   function handleRemoveTask(id: number) {
     //TODO - remove task from state
     const newArray = tasks.filter((task) => task.id !== id);
-    setTasks(newArray);
+    Alert.alert("Tem certeza que deseja remover a tarefa?", "", [
+      {
+        text: "Cancelar",
+        onPress: () => {},
+        style: "cancel",
+      },
+      { text: "Sim", onPress: () => setTasks(newArray) },
+    ]);
   }
 
   return (
